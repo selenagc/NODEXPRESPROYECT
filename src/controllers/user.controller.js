@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import pool from "../db/connection.js";
+import { userDecorator } from "../decorators/user.decorator.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -23,9 +24,15 @@ export const registerUser = async (req, res) => {
       [id, name, email, hashedPassword]
     );
 
-    res.status(201).json({ message: "Usuario registrado exitosamente" });
+    const [rows] = await pool.query("SELECT id, name, email FROM user WHERE id = ?", [id]);
+    if (!rows || rows.length === 0) {
+      return res.status(500).json({ message: "Error interno del servidor" });
+    }
+
+    const newUser = rows[0];
+    res.status(201).json(userDecorator(newUser));
+
   } catch (error) {
-    console.error("Error al registrar usuario:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
