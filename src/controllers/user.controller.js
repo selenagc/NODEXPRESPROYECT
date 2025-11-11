@@ -6,7 +6,7 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Todos los campos son obligatorios" });
+      return res.status(422).json({ message: "Todos los campos son obligatorios" });
     }
 
     const [existingUser] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
@@ -20,15 +20,8 @@ export const registerUser = async (req, res) => {
       [name, email, hashedPassword]
     );
 
-    const [newUser] = await pool.query(
-      "SELECT id, name, email, created_at FROM user WHERE id = ?", 
-      [result.insertId]
-    );
-
-    const userData = userDecorator(newUser[0]);
-    res.status(201).json({
-      user: userData
-    });
+    const newUser = { name: name, email: email };
+    res.status(201).json(userDecorator(newUser));
   } catch (error) {
     res.status(500).json({ message: "Error interno del servidor" });
   }
