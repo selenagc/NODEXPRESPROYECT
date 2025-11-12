@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS tasks (
+  id CHAR(36) PRIMARY KEY,
+  title VARCHAR(150) NOT NULL,
+  description TEXT,
+  status ENUM('PENDIENTE','COMPLETADA') DEFAULT 'PENDIENTE',
+  category_id CHAR(36) NULL,
+  user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_task_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+  CONSTRAINT fk_task_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
