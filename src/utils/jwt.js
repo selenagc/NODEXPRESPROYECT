@@ -18,6 +18,12 @@ export const verifyToken = (token) => {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
-    throw new Error('Token inválido');
+    if (error.name === 'TokenExpiredError') {
+      throw new Error('Token expirado');
+    } else if (error.name === 'JsonWebTokenError') {
+      throw new Error('Token inválido');
+    } else {
+      throw new Error('Error al verificar token');
+    }
   }
 };
