@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-
 const JWT_SECRET = process.env.JWT_SECRET || 'tu-clave-secreta-super-segura-2024';
 const JWT_EXPIRES = process.env.JWT_EXPIRES || '24h';
 
