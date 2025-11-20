@@ -3,6 +3,7 @@ import { store, index, update, destroy, show } from "../controllers/tag.controll
 import {authMiddleware} from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
+
 router.post("/",authMiddleware, store);
 router.get("/",authMiddleware, index);
 router.get("/:id",authMiddleware, show);
