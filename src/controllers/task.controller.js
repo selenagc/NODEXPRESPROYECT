@@ -35,7 +35,6 @@ export async function store(req, res) {
     }
 
     const id = uuidv4();
-
     await db.query("START TRANSACTION");
 
     await db.query(
@@ -121,9 +120,6 @@ export async function index(req, res) {
     const [tasks] = await db.query(query, params);
 
     const taskIds = tasks.map(task => task.id);
-
-    let tasksWithTags = [];
-
     if (taskIds.length > 0) {
       const placeholders = taskIds.map(() => '?').join(',');
       const [allTagRows] = await db.query(
@@ -179,7 +175,6 @@ export async function show(req, res) {
 
     const taskIds = [id];
     const placeholders = taskIds.map(() => '?').join(',');
-
     const [tagRows] = await db.query(
       `SELECT tags.id, tags.name 
        FROM tags
@@ -296,7 +291,6 @@ export async function update(req, res) {
 
     const taskIds = [id];
     const placeholders = taskIds.map(() => '?').join(',');
-
     const [tagRows] = await db.query(
       `SELECT tags.id, tags.name 
        FROM tags
@@ -339,7 +333,6 @@ export async function destroy(req, res) {
     }
 
     await db.query("DELETE FROM tasks WHERE id = ? AND user_id = ?", [id, user_id]);
-
     res.json({
       message: "Tarea eliminada correctamente",
       deleted: true
